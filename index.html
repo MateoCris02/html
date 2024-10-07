@@ -158,8 +158,8 @@
 
   <div id="productPreview"></div>
 
-  <h2>Código HTML generado:</h2>
-  <pre id="htmlCode"></pre>
+  <h2>Código HTML y CSS generado:</h2>
+  <pre id="combinedCode"></pre>
 
   <button id="copyButton" onclick="copyToClipboard()">Copiar código</button>
 </main>
@@ -199,6 +199,11 @@
     const containerBgColor = document.getElementById('containerBgColor').value;
 
     let detailsHtml = '';
+    let cssStyles = `
+      .product-container { background-color: ${containerBgColor}; }
+      .product-header { background-color: ${productBgColor}; }
+    `;
+
     for (let i = 0; i < detailCount; i++) {
       const detailTitle = document.getElementById(`detailTitle${i}`).value;
       const detailDescription = document.getElementById(`detailDescription${i}`).value;
@@ -213,11 +218,15 @@
           <p>${detailDescription}</p>
         </div>
       `;
+
+      cssStyles += `
+        .detail-box:nth-of-type(${i + 1}) { background-color: ${detailBgColor}; color: ${detailTextColor}; }
+      `;
     }
 
     const productHtml = `
       <div class="product-container" style="background-color: ${containerBgColor};">
-        <div class="product-header" style="background-color: ${productBgColor}; padding: 20px; border-radius: 10px;">
+        <div class="product-header" style="background-color: ${productBgColor};">
           <img src="${productImage}" alt="${productName}">
           <div class="product-description">
             <h1>${productName}</h1>
@@ -230,19 +239,23 @@
       </div>
     `;
 
+    const combinedHtml = `
+      <style>
+        ${cssStyles}
+      </style>
+      ${productHtml}
+    `;
+
     document.getElementById('productPreview').innerHTML = productHtml;
-    document.getElementById('htmlCode').textContent = productHtml;
+    document.getElementById('combinedCode').innerText = combinedHtml;
   }
 
   function copyToClipboard() {
-    const htmlCode = document.getElementById('htmlCode').textContent;
-    navigator.clipboard.writeText(htmlCode).then(() => {
-      alert('¡Código copiado al portapapeles!');
-    }, err => {
-      console.error('Error al copiar: ', err);
+    const combinedCode = document.getElementById('combinedCode').innerText;
+    navigator.clipboard.writeText(combinedCode).then(() => {
+      alert('Código combinado copiado al portapapeles');
     });
   }
 </script>
-
 </body>
 </html>
