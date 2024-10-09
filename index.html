@@ -90,56 +90,164 @@
             background-color: #e9ecef;
             border-radius: 4px;
         }
+        /* Estilos para el juego */
+        .game-container {
+            max-width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .game-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        article {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        article img:first-child {
+            border-radius: 4px;
+            object-fit: cover;
+            width: 100%;
+        }
+        article:hover {
+            transform: 
+            perspective(250px)
+            rotateX(10deg)
+            translateY(-5%)
+            translateZ(0);
+        }
+        article::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            background-image: 
+            linear-gradient(
+                to bottom, 
+                transparent 10%
+            );
+            opacity: 0;
+            transition: all .3s ease;
+        }
+        article:hover::before {
+            opacity: 1;
+        }
+        article img:nth-child(2),
+        article img:nth-child(3),
+        article img:nth-child(4) {
+            position: absolute;
+            width: 100%;
+            max-width: 300px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(25%);
+            transition: .3s ease;
+            opacity: 0;
+        }
+        article:hover img:nth-child(2),
+        article:hover img:nth-child(3),
+        article:hover img:nth-child(4) {
+            opacity: 1;
+            transform: translateX(-50%) translateY(10%);
+        }
+        article img:nth-child(3),
+        article img:nth-child(4) {
+            border-radius: 10px;
+        }
+        @media (max-width: 600px) {
+            article {
+                width: 100%;
+            }
+            article img:nth-child(2),
+            article img:nth-child(3),
+            article img:nth-child(4) {
+                width: 80%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Generador Descripción de Producto</h1>
+        <h1>Generador Avanzado de Descripción de Producto</h1>
         
         <div>
-            <label for="productImage">URL de la imagen del producto:</label>
-            <input type="text" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
-            
-            <label for="productName">Nombre del producto:</label>
-            <input type="text" id="productName" placeholder="Nombre del producto">
-            
-            <label for="productDescription">Descripción del producto:</label>
-            <textarea id="productDescription" placeholder="Descripción breve del producto"></textarea>
-            
-            <label for="headerBgColor">Color de fondo del encabezado:</label>
-            <input type="color" id="headerBgColor" value="#ffffff">
-
-            <label for="headerLayout">Diseño del encabezado:</label>
-            <select id="headerLayout">
-                <option value="horizontal">Horizontal</option>
-                <option value="vertical">Vertical</option>
+            <label for="generatorType">Tipo de generador:</label>
+            <select id="generatorType">
+                <option value="product">Descripción de Producto</option>
+                <option value="game">Juego Nintendo</option>
             </select>
 
-            <label for="fontFamily">Fuente principal:</label>
-            <select id="fontFamily">
-                <option value="'Roboto', sans-serif">Roboto</option>
-                <option value="'Open Sans', sans-serif">Open Sans</option>
-                <option value="'Lato', sans-serif">Lato</option>
-                <option value="'Montserrat', sans-serif">Montserrat</option>
-                <option value="'Poppins', sans-serif">Poppins</option>
-            </select>
-
-            <label for="outputFormat">Formato de salida:</label>
-            <select id="outputFormat">
-                <option value="html">HTML y CSS</option>
-                <option value="json">JSON</option>
+            <div id="productFields">
+                <label for="productImage">URL de la imagen del producto:</label>
+                <input type="text" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
                 
-            </select>
+                <label for="productName">Nombre del producto:</label>
+                <input type="text" id="productName" placeholder="Nombre del producto">
+                
+                <label for="productDescription">Descripción del producto:</label>
+                <textarea id="productDescription" placeholder="Descripción breve del producto"></textarea>
+                
+                <label for="headerBgColor">Color de fondo del encabezado:</label>
+                <input type="color" id="headerBgColor" value="#ffffff">
 
-            <label for="videoUrl">URL del video (YouTube o Vimeo):</label>
-            <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                <label for="headerLayout">Diseño del encabezado:</label>
+                <select id="headerLayout">
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
+
+                <label for="fontFamily">Fuente principal:</label>
+                <select id="fontFamily">
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Open Sans', sans-serif">Open Sans</option>
+                    <option value="'Lato', sans-serif">Lato</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                </select>
+
+                <label for="outputFormat">Formato de salida:</label>
+                <select id="outputFormat">
+                    <option value="html">HTML y CSS</option>
+                    <option value="json">JSON</option>
+                    <option value="markdown">Markdown</option>
+                </select>
+
+                <label for="videoUrl">URL del video (YouTube o Vimeo):</label>
+                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+            </div>
+
+            <div id="gameFields" style="display: none;">
+                <label for="gameLogo">URL del logo del juego:</label>
+                <input type="text" id="gameLogo" placeholder="https://ejemplo.com/logo.png">
+
+                <label for="gamePortada">URL de la portada del juego:</label>
+                <input type="text" id="gamePortada" placeholder="https://ejemplo.com/portada.jpg">
+
+                <label for="gameCharacter">URL de la imagen del personaje:</label>
+                <input type="text" id="gameCharacter" placeholder="https://ejemplo.com/personaje.png">
+
+                <label for="gameGif1">URL del primer GIF del juego:</label>
+                <input type="text" id="gameGif1" placeholder="https://ejemplo.com/gif1.gif">
+
+                <label for="gameGif2">URL del segundo GIF del juego:</label>
+                <input type="text" id="gameGif2" placeholder="https://ejemplo.com/gif2.gif">
+
+                <label for="gameCursor">URL del cursor personalizado:</label>
+                <input type="text" id="gameCursor" placeholder="https://ejemplo.com/cursor.png">
+            </div>
         </div>
         
-        <h2>Detalles del Producto</h2>
-        <div id="detailsContainer"></div>
-        <button onclick="addDetail()">Agregar Detalle</button>
+        <div id="productDetailsSection">
+            <h2>Detalles del Producto</h2>
+            <div id="detailsContainer"></div>
+            <button onclick="addDetail()">Agregar Detalle</button>
+        </div>
         
-        <button onclick="generateProduct()">Generar Descripción del Producto</button>
+        <button onclick="generateContent()">Generar Contenido</button>
         
         <h2>Código Generado</h2>
         <pre id="generatedCode"></pre>
@@ -252,12 +360,21 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
+        function generateContent() {
+            const generatorType = document.getElementById('generatorType').value;
+            if (generatorType === 'product') {
+                generateProduct();
+            } else if (generatorType === 'game') {
+                generateGame();
+            }
+        }
+
         function generateProduct() {
             const productImage = document.getElementById('productImage').value;
             const productName = document.getElementById('productName').value;
             const productDescription = document.getElementById('productDescription').value;
             const headerBgColor = document.getElementById('headerBgColor').value;
-            const headerLayout = document.getElementById('headerLayout').value;
+            const headerLayout =   document.getElementById('headerLayout').value;
             const fontFamily = document.getElementById('fontFamily').value;
             const outputFormat = document.getElementById('outputFormat').value;
             const videoUrl = document.getElementById('videoUrl').value;
@@ -293,6 +410,34 @@
             } else {
                 document.getElementById('preview').innerHTML = '<p>Vista previa no disponible para este formato de salida.</p>';
             }
+        }
+
+        function generateGame() {
+            const gameLogo = document.getElementById('gameLogo').value;
+            const gamePortada = document.getElementById('gamePortada').value;
+            const gameCharacter = document.getElementById('gameCharacter').value;
+            const gameGif1 = document.getElementById('gameGif1').value;
+            const gameGif2 = document.getElementById('gameGif2').value;
+            const gameCursor = document.getElementById('gameCursor').value;
+
+            const gameHtml = `
+                <div class="game-container">
+                    <img src="${gameLogo}" alt="Logo" style="width: 100%; max-width: 437.921px;">
+                    <article>
+                        <img src="${gamePortada}" alt="Portada">
+                        <img src="${gameCharacter}" alt="Imagen-Saliendo">
+                        <img src="${gameGif1}" alt="gif_derecha">
+                        <img src="${gameGif2}" alt="gif">
+                    </article>
+                    <img src="${gameCursor}" style="width:70px" alt="Cursor">
+                    <p><br></p>
+                    <p><font face="Tahoma">Pase el cursor por la imagen para ver el trailer!!</font></p>
+                    <p><br></p><p><br></p>
+                </div>
+            `;
+
+            document.getElementById('generatedCode').textContent = gameHtml;
+            document.getElementById('preview').innerHTML = gameHtml;
         }
 
         function generateHtml(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details, videoUrl) {
@@ -358,7 +503,7 @@
                         padding: 20px;
                     }
                     .product-header {
-                        display:  flex;
+                        display: flex;
                         flex-direction: ${headerFlexDirection};
                         align-items: center;
                         margin-bottom: 20px;
@@ -438,6 +583,18 @@
                         from { opacity: 0; transform: translateY(-20px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
+                    @media (max-width: 768px) {
+                        .product-header {
+                            flex-direction: column;
+                        }
+                        .product-header img {
+                            margin-right: 0;
+                            margin-bottom: 20px;
+                        }
+                        .detail-box {
+                            flex: 1 1 100%;
+                        }
+                    }
                 </style>
 
                 <div class="product-header">
@@ -498,6 +655,22 @@
             document.body.removeChild(textArea);
             alert('Código copiado al portapapeles');
         }
+
+        document.getElementById('generatorType').addEventListener('change', function() {
+            const productFields = document.getElementById('productFields');
+            const gameFields = document.getElementById('gameFields');
+            const productDetailsSection = document.getElementById('productDetailsSection');
+
+            if (this.value === 'product') {
+                productFields.style.display = 'block';
+                gameFields.style.display = 'none';
+                productDetailsSection.style.display = 'block';
+            } else if (this.value === 'game') {
+                productFields.style.display = 'none';
+                gameFields.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
