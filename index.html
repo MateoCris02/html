@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Descripcion</title>
+    <title>Generador Avanzado de Descripción de Producto</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -94,7 +94,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Generador Descripción de Producto</h1>
+        <h1>Generador Avanzado de Descripción de Producto</h1>
         
         <div>
             <label for="productImage">URL de la imagen del producto:</label>
@@ -130,6 +130,9 @@
                 <option value="json">JSON</option>
                 <option value="markdown">Markdown</option>
             </select>
+
+            <label for="videoUrl">URL del video (YouTube o Vimeo):</label>
+            <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
         </div>
         
         <h2>Detalles del Producto</h2>
@@ -257,6 +260,7 @@
             const headerLayout = document.getElementById('headerLayout').value;
             const fontFamily = document.getElementById('fontFamily').value;
             const outputFormat = document.getElementById('outputFormat').value;
+            const videoUrl = document.getElementById('videoUrl').value;
 
             let details = [];
             document.querySelectorAll('.detail').forEach((detail, index) => {
@@ -273,13 +277,13 @@
 
             switch(outputFormat) {
                 case 'html':
-                    output = generateHtml(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details);
+                    output = generateHtml(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details, videoUrl);
                     break;
                 case 'json':
-                    output = generateJson(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details);
+                    output = generateJson(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details, videoUrl);
                     break;
                 case 'markdown':
-                    output = generateMarkdown(productImage, productName, productDescription, details);
+                    output = generateMarkdown(productImage, productName, productDescription, details, videoUrl);
                     break;
             }
 
@@ -291,7 +295,7 @@
             }
         }
 
-        function generateHtml(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details) {
+        function generateHtml(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details, videoUrl) {
             let detailsHtml = '';
             let detailStyles = '';
             let animationStyles = '';
@@ -326,6 +330,25 @@
 
             const headerFlexDirection = headerLayout === 'vertical' ? 'column' : 'row';
 
+            let videoHtml = '';
+            if (videoUrl) {
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    const videoId = videoUrl.split('v=')[1] || videoUrl.split('/').pop();
+                    videoHtml = `
+                        <div class="video-container">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                    `;
+                } else if (videoUrl.includes('vimeo.com')) {
+                    const videoId = videoUrl.split('/').pop();
+                    videoHtml = `
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/${videoId}" width="560" height="315" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            }
+
             return `
                 <style>
                     body {
@@ -335,7 +358,7 @@
                         padding: 20px;
                     }
                     .product-header {
-                        display: flex;
+                        display:  flex;
                         flex-direction: ${headerFlexDirection};
                         align-items: center;
                         margin-bottom: 20px;
@@ -371,7 +394,6 @@
                         display: flex;
                         flex-wrap: wrap;
                         gap: 20px;
-                        
                         margin-top: 20px;
                     }
                     .detail-box {
@@ -396,6 +418,20 @@
                     .detail-box img:hover {
                         transform: scale(1.1);
                     }
+                    .video-container {
+                        margin-top: 20px;
+                        position: relative;
+                        padding-bottom: 56.25%;
+                        height: 0;
+                        overflow: hidden;
+                    }
+                    .video-container iframe {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                    }
                     ${detailStyles}
                     ${animationStyles}
                     @keyframes slideIn {
@@ -414,10 +450,11 @@
                 <div class="product-details">
                     ${detailsHtml}
                 </div>
+                ${videoHtml}
             `;
         }
 
-        function generateJson(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details) {
+        function generateJson(productImage, productName, productDescription, headerBgColor, headerLayout, fontFamily, details, videoUrl) {
             const productData = {
                 productImage,
                 productName,
@@ -425,12 +462,13 @@
                 headerBgColor,
                 headerLayout,
                 fontFamily,
-                details
+                details,
+                videoUrl
             };
             return JSON.stringify(productData, null, 2);
         }
 
-        function generateMarkdown(productImage, productName, productDescription, details) {
+        function generateMarkdown(productImage, productName, productDescription, details, videoUrl) {
             let markdown = `# ${productName}\n\n`;
             markdown += `![${productName}](${productImage})\n\n`;
             markdown += `${productDescription}\n\n`;
@@ -441,6 +479,11 @@
                 markdown += `![${detail.title}](${detail.image})\n\n`;
                 markdown += `${detail.description}\n\n`;
             });
+
+            if (videoUrl) {
+                markdown += `## Video del Producto\n\n`;
+                markdown += `[Ver video](${videoUrl})\n\n`;
+            }
 
             return markdown;
         }
