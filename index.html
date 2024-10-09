@@ -1,261 +1,257 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descripción de Producto</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .product-container {
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s;
-    }
-    .product-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 20px;
-      transition: transform 0.3s;
-    }
-    .product-header:hover {
-      transform: scale(1.02);
-    }
-    .product-header img {
-      max-width: 300px;
-      width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-      margin-right: 20px;
-    }
-    .product-description {
-      flex: 1;
-    }
-    .product-description h1 {
-      font-size: 2.5rem;
-      margin: 0;
-      color: #333;
-    }
-    .product-description p {
-      font-size: 1.1rem;
-      color: #666;
-    }
-    .product-details {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .detail-box {
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      flex: 1 1 calc(33.333% - 20px);
-      box-sizing: border-box;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .detail-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-    .detail-box img {
-      max-width: 80px;
-      margin-bottom: 10px;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
-    .detail-box img:hover {
-      transform: scale(1.1);
-    }
-    form input, form textarea, form select {
-      display: block;
-      margin-bottom: 10px;
-      padding: 8px;
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    form button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    form button:hover {
-      background-color: #0056b3;
-    }
-    pre {
-      background-color: #f1f1f1;
-      padding: 10px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      border-radius: 5px;
-      overflow: auto;
-    }
-    #copyButton {
-      background-color: #28a745;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.3s;
-    }
-    #copyButton:hover {
-      background-color: #218838;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Descripción de Producto</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #detailsContainer {
+            margin-top: 20px;
+        }
+        .detail {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        #generatedCode {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #preview {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-<main>
-  <h1>HTML Y CSS para Descripción</h1>
-
-  <form id="productForm">
-    <h2>Sube los detalles del producto</h2>
-    <label for="productImageUrl">Imagen principal del producto (URL):</label>
-    <input type="text" id="productImageUrl" placeholder="URL de la imagen principal"><br>
-
-    <label for="productName">Nombre del producto:</label>
-    <input type="text" id="productName" placeholder="Ej: realme 12 Pro+ 5G"><br>
-
-    <label for="productDescription">Descripción breve:</label>
-    <textarea id="productDescription" placeholder="Ej: Sea un maestro del retrato..."></textarea><br>
-
-    <h3>Color de fondo de todo el contenedor del producto:</h3>
-    <input type="color" id="containerBgColor" value="#ffffff"><br><br>
-
-    <h3>Color de fondo del bloque principal del producto:</h3>
-    <input type="color" id="productBgColor" value="#ffffff"><br><br>
-
-    <h3>Detalles adicionales</h3>
-
-    <div id="detailsContainer">
-      <!-- Aquí se agregarán detalles dinámicamente -->
+    <div class="container">
+        <h1>Generador de Descripción de Producto</h1>
+        
+        <div>
+            <label for="productImage">URL de la imagen del producto:</label>
+            <input type="text" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
+            
+            <label for="productName">Nombre del producto:</label>
+            <input type="text" id="productName" placeholder="Nombre del producto">
+            
+            <label for="productDescription">Descripción del producto:</label>
+            <textarea id="productDescription" placeholder="Descripción breve del producto"></textarea>
+            
+            <label for="headerBgColor">Color de fondo del encabezado:</label>
+            <input type="color" id="headerBgColor" value="#ffffff">
+        </div>
+        
+        <h2>Detalles del Producto</h2>
+        <div id="detailsContainer"></div>
+        <button onclick="addDetail()">Agregar Detalle</button>
+        
+        <button onclick="generateProduct()">Generar Descripción del Producto</button>
+        
+        <h2>Código Generado</h2>
+        <pre id="generatedCode"></pre>
+        <button onclick="copyToClipboard()">Copiar Código</button>
+        
+        <h2>Vista Previa</h2>
+        <div id="preview"></div>
     </div>
 
-    <button type="button" onclick="addDetail()">Agregar detalle</button><br>
+    <script>
+        let detailCount = 0;
 
-    <button type="button" onclick="generateProduct()">Generar producto</button>
-  </form>
+        function addDetail() {
+            const container = document.getElementById('detailsContainer');
+            const detailDiv = document.createElement('div');
+            detailDiv.className = 'detail';
+            detailDiv.innerHTML = `
+                <label for="detailTitle${detailCount}">Título del detalle:</label>
+                <input type="text" id="detailTitle${detailCount}" placeholder="Título">
+                
+                <label for="detailDescription${detailCount}">Descripción del detalle:</label>
+                <textarea id="detailDescription${detailCount}" placeholder="Descripción"></textarea>
+                
+                <label for="detailImage${detailCount}">URL de la imagen del detalle:</label>
+                <input type="text" id="detailImage${detailCount}" placeholder="https://ejemplo.com/icono.jpg">
+                
+                <label for="detailBgColor${detailCount}">Color de fondo del detalle:</label>
+                <input type="color" id="detailBgColor${detailCount}" value="#f8f9fa">
+            `;
+            container.appendChild(detailDiv);
+            detailCount++;
+        }
 
-  <div id="productPreview"></div>
+        function generateProduct() {
+            const productImage = document.getElementById('productImage').value;
+            const productName = document.getElementById('productName').value;
+            const productDescription = document.getElementById('productDescription').value;
+            const headerBgColor = document.getElementById('headerBgColor').value;
 
-  <h2>Código HTML y CSS generado:</h2>
-  <pre id="combinedCode"></pre>
+            let detailsHtml = '';
+            let detailStyles = '';
 
-  <button id="copyButton" onclick="copyToClipboard()">Copiar código</button>
-</main>
+            for (let i = 0; i < detailCount; i++) {
+                const title = document.getElementById(`detailTitle${i}`).value;
+                const description = document.getElementById(`detailDescription${i}`).value;
+                const image = document.getElementById(`detailImage${i}`).value;
+                const bgColor = document.getElementById(`detailBgColor${i}`).value;
 
-<script>
-  let detailCount = 0;
+                detailsHtml += `
+                    <div class="detail-box detail-${i}">
+                        <img src="${image}" alt="${title}">
+                        <h3>${title}</h3>
+                        <p>${description}</p>
+                    </div>
+                `;
 
-  function addDetail() {
-    const container = document.getElementById('detailsContainer');
+                detailStyles += `
+                    .detail-${i} {
+                        background-color: ${bgColor};
+                    }
+                `;
+            }
 
-    const detailDiv = document.createElement('div');
-    detailDiv.innerHTML = `
-      <label for="detailTitle${detailCount}">Título del detalle:</label>
-      <input type="text" id="detailTitle${detailCount}" placeholder="Ej: Cámara Sony IMX890 OIS"><br>
+            const generatedHtml = `
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f5f5f5;
+                    }
+                    .product-header {
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        transition: transform 0.3s;
+                        background-color: ${headerBgColor};
+                        padding: 20px;
+                        border-radius: 8px;
+                    }
+                    .product-header:hover {
+                        transform: scale(1.02);
+                    }
+                    .product-header img {
+                        max-width: 300px;
+                        width: 100%;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+                        margin-right: 20px;
+                    }
+                    .product-description {
+                        flex: 1;
+                    }
+                    .product-description h1 {
+                        font-size: 2.5rem;
+                        margin: 0;
+                        color: #333;
+                        animation: slideIn 0.5s ease;
+                    }
+                    .product-description p {
+                        font-size: 1.1rem;
+                        color: #666;
+                    }
+                    .product-details {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 20px;
+                        margin-top: 20px;
+                    }
+                    .detail-box {
+                        padding: 15px;
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                        flex: 1 1 calc(33.333% - 20px);
+                        box-sizing: border-box;
+                        transition: transform 0.3s, box-shadow 0.3s;
+                    }
+                    .detail-box:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    }
+                    .detail-box img {
+                        max-width: 80px;
+                        margin-bottom: 10px;
+                        border-radius: 50%;
+                        transition: transform 0.3s;
+                    }
+                    .detail-box img:hover {
+                        transform: scale(1.1);
+                    }
+                    ${detailStyles}
+                </style>
 
-      <label for="detailDescription${detailCount}">Descripción del detalle:</label>
-      <textarea id="detailDescription${detailCount}" placeholder="Ej: Algoritmo omnífocal..."></textarea><br>
+                <div class="product-header">
+                    <img src="${productImage}" alt="${productName}">
+                    <div class="product-description">
+                        <h1>${productName}</h1>
+                        <p>${productDescription}</p>
+                    </div>
+                </div>
+                <div class="product-details">
+                    ${detailsHtml}
+                </div>
+            `;
 
-      <label for="detailImage${detailCount}">Icono del detalle (URL):</label>
-      <input type="text" id="detailImageUrl${detailCount}" placeholder="URL del icono del detalle"><br>
+            document.getElementById('generatedCode').textContent = generatedHtml;
+            document.getElementById('preview').innerHTML = generatedHtml;
+        }
 
-      <label for="detailBgColor${detailCount}">Color de fondo del detalle:</label>
-      <input type="color" id="detailBgColor${detailCount}" value="#ffffff"><br>
-
-      <label for="detailTextColor${detailCount}">Color de texto del detalle:</label>
-      <input type="color" id="detailTextColor${detailCount}" value="#000000"><br>
-    `;
-    container.appendChild(detailDiv);
-    detailCount++;
-  }
-
-  function generateProduct() {
-    const productImage = document.getElementById('productImageUrl').value;
-    const productName = document.getElementById('productName').value;
-    const productDescription = document.getElementById('productDescription').value;
-    const productBgColor = document.getElementById('productBgColor').value;
-    const containerBgColor = document.getElementById('containerBgColor').value;
-
-    let detailsHtml = '';
-    let cssStyles = `
-      .product-container { background-color: ${containerBgColor}; }
-      .product-header { background-color: ${productBgColor}; }
-    `;
-
-    for (let i = 0; i < detailCount; i++) {
-      const detailTitle = document.getElementById(`detailTitle${i}`).value;
-      const detailDescription = document.getElementById(`detailDescription${i}`).value;
-      const detailImage = document.getElementById(`detailImageUrl${i}`).value;
-      const detailBgColor = document.getElementById(`detailBgColor${i}`).value;
-      const detailTextColor = document.getElementById(`detailTextColor${i}`).value;
-
-      detailsHtml += `
-        <div class="detail-box" style="background-color: ${detailBgColor}; color: ${detailTextColor};">
-          <img src="${detailImage}" alt="${detailTitle}">
-          <h3>${detailTitle}</h3>
-          <p>${detailDescription}</p>
-        </div>
-      `;
-
-      cssStyles += `
-        .detail-box:nth-of-type(${i + 1}) { background-color: ${detailBgColor}; color: ${detailTextColor}; }
-      `;
-    }
-
-    const productHtml = `
-      <div class="product-container" style="background-color: ${containerBgColor};">
-        <div class="product-header" style="background-color: ${productBgColor};">
-          <img src="${productImage}" alt="${productName}">
-          <div class="product-description">
-            <h1>${productName}</h1>
-            <p>${productDescription}</p>
-          </div>
-        </div>
-        <div class="product-details">
-          ${detailsHtml}
-        </div>
-      </div>
-    `;
-
-    const combinedHtml = `
-      <style>
-        ${cssStyles}
-      </style>
-      ${productHtml}
-    `;
-
-    document.getElementById('productPreview').innerHTML = productHtml;
-    document.getElementById('combinedCode').innerText = combinedHtml;
-  }
-
-  function copyToClipboard() {
-    const combinedCode = document.getElementById('combinedCode').innerText;
-    navigator.clipboard.writeText(combinedCode).then(() => {
-      alert('Código combinado copiado al portapapeles');
-    });
-  }
-</script>
+        function copyToClipboard() {
+            const codeElement = document.getElementById('generatedCode');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Código copiado al portapapeles');
+        }
+    </script>
 </body>
 </html>
