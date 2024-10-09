@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Descripción de Producto</title>
+    <title>Generador Avanzado de Descripción de Producto</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -27,7 +27,7 @@
             display: block;
             margin-top: 10px;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
@@ -68,11 +68,32 @@
             border-top: 1px solid #ddd;
             padding-top: 20px;
         }
+        .drag-handle {
+            cursor: move;
+            padding: 5px;
+            background-color: #ddd;
+            margin-bottom: 5px;
+        }
+        .delete-detail {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        .detail-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Generador de Descripción de Producto</h1>
+        <h1>Generador Avanzado de Descripción de Producto</h1>
         
         <div>
             <label for="productImage">URL de la imagen del producto:</label>
@@ -86,6 +107,12 @@
             
             <label for="headerBgColor">Color de fondo del encabezado:</label>
             <input type="color" id="headerBgColor" value="#ffffff">
+
+            <label for="headerLayout">Diseño del encabezado:</label>
+            <select id="headerLayout">
+                <option value="horizontal">Horizontal</option>
+                <option value="vertical">Vertical</option>
+            </select>
         </div>
         
         <h2>Detalles del Producto</h2>
@@ -109,21 +136,100 @@
             const container = document.getElementById('detailsContainer');
             const detailDiv = document.createElement('div');
             detailDiv.className = 'detail';
+            detailDiv.setAttribute('draggable', 'true');
             detailDiv.innerHTML = `
+                <div class="drag-handle">&#9776; Arrastrar</div>
+                <button class="delete-detail" onclick="deleteDetail(this)">Eliminar</button>
                 <label for="detailTitle${detailCount}">Título del detalle:</label>
-                <input type="text" id="detailTitle${detailCount}" placeholder="Título">
+                <input type="text" id="detailTitle${detailCount}" placeholder="Título" oninput="updateDetailPreview(${detailCount})">
                 
                 <label for="detailDescription${detailCount}">Descripción del detalle:</label>
-                <textarea id="detailDescription${detailCount}" placeholder="Descripción"></textarea>
+                <textarea id="detailDescription${detailCount}" placeholder="Descripción" oninput="updateDetailPreview(${detailCount})"></textarea>
                 
                 <label for="detailImage${detailCount}">URL de la imagen del detalle:</label>
-                <input type="text" id="detailImage${detailCount}" placeholder="https://ejemplo.com/icono.jpg">
+                <input type="text" id="detailImage${detailCount}" placeholder="https://ejemplo.com/icono.jpg" oninput="updateDetailPreview(${detailCount})">
                 
                 <label for="detailBgColor${detailCount}">Color de fondo del detalle:</label>
-                <input type="color" id="detailBgColor${detailCount}" value="#f8f9fa">
+                <input type="color" id="detailBgColor${detailCount}" value="#f8f9fa" oninput="updateDetailPreview(${detailCount})">
+
+                <label for="detailAnimation${detailCount}">Animación del detalle:</label>
+                <select id="detailAnimation${detailCount}" onchange="updateDetailPreview(${detailCount})">
+                    <option value="none">Ninguna</option>
+                    <option value="fade">Desvanecer</option>
+                    <option value="slide">Deslizar</option>
+                    <option value="rotate">Rotar</option>
+                </select>
+
+                <div class="detail-preview" id="detailPreview${detailCount}"></div>
             `;
             container.appendChild(detailDiv);
+            detailDiv.addEventListener('dragstart', dragStart);
+            detailDiv.addEventListener('dragover', dragOver);
+            detailDiv.addEventListener('drop', drop);
+            updateDetailPreview(detailCount);
             detailCount++;
+        }
+
+        function deleteDetail(button) {
+            button.parentElement.remove();
+        }
+
+        function updateDetailPreview(index) {
+            const title = document.getElementById(`detailTitle${index}`).value;
+            const description = document.getElementById(`detailDescription${index}`).value;
+            const image = document.getElementById(`detailImage${index}`).value;
+            const bgColor = document.getElementById(`detailBgColor${index}`).value;
+            const animation = document.getElementById(`detailAnimation${index}`).value;
+
+            const previewDiv = document.getElementById(`detailPreview${index}`);
+            previewDiv.innerHTML = `
+                <div style="background-color: ${bgColor}; padding: 10px; border-radius: 5px;">
+                    <img src="${image}" alt="${title}" style="max-width: 50px; height: auto;">
+                    <h3>${title}</h3>
+                    <p>${description}</p>
+                </div>
+            `;
+
+            if (animation !== 'none') {
+                previewDiv.style.animation = `${animation} 1s`;
+            }
+        }
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData('text');
+            const draggedElement = document.getElementById(data);
+            const dropzone = e.target.closest('.detail');
+            if (dropzone && draggedElement !== dropzone) {
+                const container = document.getElementById('detailsContainer');
+                const afterElement = getDropPosition(container, e.clientY);
+                if (afterElement) {
+                    container.insertBefore(draggedElement, afterElement);
+                } else {
+                    container.appendChild(draggedElement);
+                }
+            }
+        }
+
+        function getDropPosition(container, y) {
+            const draggableElements = [...container.querySelectorAll('.detail:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
         function generateProduct() {
@@ -131,18 +237,21 @@
             const productName = document.getElementById('productName').value;
             const productDescription = document.getElementById('productDescription').value;
             const headerBgColor = document.getElementById('headerBgColor').value;
+            const headerLayout = document.getElementById('headerLayout').value;
 
             let detailsHtml = '';
             let detailStyles = '';
+            let animationStyles = '';
 
-            for (let i = 0; i < detailCount; i++) {
-                const title = document.getElementById(`detailTitle${i}`).value;
-                const description = document.getElementById(`detailDescription${i}`).value;
-                const image = document.getElementById(`detailImage${i}`).value;
-                const bgColor = document.getElementById(`detailBgColor${i}`).value;
+            document.querySelectorAll('.detail').forEach((detail, index) => {
+                const title = detail.querySelector('input[id^="detailTitle"]').value;
+                const description = detail.querySelector('textarea[id^="detailDescription"]').value;
+                const image = detail.querySelector('input[id^="detailImage"]').value;
+                const bgColor = detail.querySelector('input[id^="detailBgColor"]').value;
+                const animation = detail.querySelector('select[id^="detailAnimation"]').value;
 
                 detailsHtml += `
-                    <div class="detail-box detail-${i}">
+                    <div class="detail-box detail-${index}">
                         <img src="${image}" alt="${title}">
                         <h3>${title}</h3>
                         <p>${description}</p>
@@ -150,21 +259,37 @@
                 `;
 
                 detailStyles += `
-                    .detail-${i} {
+                    .detail-${index} {
                         background-color: ${bgColor};
                     }
                 `;
-            }
+
+                if (animation !== 'none') {
+                    animationStyles += `
+                        @keyframes ${animation} {
+                            0% { opacity: 0; transform: translateY(20px); }
+                            100% { opacity: 1; transform: translateY(0); }
+                        }
+                        .detail-${index} {
+                            animation: ${animation} 1s;
+                        }
+                    `;
+                }
+            });
+
+            const headerFlexDirection = headerLayout === 'vertical' ? 'column' : 'row';
 
             const generatedHtml = `
                 <style>
                     body {
                         font-family: 'Arial', sans-serif;
                         background-color: #f5f5f5;
+                        margin: 0;
+                        padding: 20px;
                     }
                     .product-header {
                         display: flex;
-                        flex-wrap: wrap;
+                        flex-direction: ${headerFlexDirection};
                         align-items: center;
                         margin-bottom: 20px;
                         transition: transform 0.3s;
@@ -224,6 +349,11 @@
                         transform: scale(1.1);
                     }
                     ${detailStyles}
+                    ${animationStyles}
+                    @keyframes slideIn {
+                        from { opacity: 0; transform: translateY(-20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
                 </style>
 
                 <div class="product-header">
