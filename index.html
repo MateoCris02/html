@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Producto</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -299,7 +300,25 @@
         }
 
         function deleteDetail(button) {
-            button.parentElement.remove();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.parentElement.remove();
+                    Swal.fire(
+                        'Eliminado!',
+                        'El detalle ha sido eliminado.',
+                        'success'
+                    )
+                }
+            })
         }
 
         function updateDetailPreview(index) {
@@ -360,13 +379,20 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        function generateContent() {
+        function generateContent()   {
             const generatorType = document.getElementById('generatorType').value;
             if (generatorType === 'product') {
                 generateProduct();
             } else if (generatorType === 'game') {
                 generateGame();
             }
+            
+            Swal.fire({
+                title: 'Contenido generado!',
+                text: 'El contenido ha sido generado exitosamente.',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
         }
 
         function generateProduct() {
@@ -374,7 +400,7 @@
             const productName = document.getElementById('productName').value;
             const productDescription = document.getElementById('productDescription').value;
             const headerBgColor = document.getElementById('headerBgColor').value;
-            const headerLayout =   document.getElementById('headerLayout').value;
+            const headerLayout = document.getElementById('headerLayout').value;
             const fontFamily = document.getElementById('fontFamily').value;
             const outputFormat = document.getElementById('outputFormat').value;
             const videoUrl = document.getElementById('videoUrl').value;
@@ -653,7 +679,14 @@
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            alert('Código copiado al portapapeles');
+            
+            Swal.fire({
+                title: 'Copiado!',
+                text: 'El código ha sido copiado al portapapeles.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
 
         document.getElementById('generatorType').addEventListener('change', function() {
